@@ -39,7 +39,7 @@ function draw() {
 
   let mouseSpeed = dist(mouseX, mouseY, pmouseX, pmouseY);
   let targetOffset = constrain(map(mouseSpeed, 0, 1, 1, 0), 0, 1);
-  smoothOffset = lerp(smoothOffset, targetOffset, 0.03);
+  smoothOffset = lerp(smoothOffset, targetOffset, 0.06);
 
   push();
 
