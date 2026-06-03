@@ -55,7 +55,7 @@ function draw() {
 
   pop();
 
-  image(vignette, 0, 0, width + 1, height + 1);
+  image(vignette, 0, 0, width + 1, height + 5);
 }
 
 function setBuffer() {
