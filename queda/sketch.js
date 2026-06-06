@@ -59,10 +59,10 @@ class Stickman {
     push();
     translate(this.pos.x, this.pos.y);
 
-    noStroke();
-    fill(255);
+    stroke(255);
+    noFill();
     ellipse(0, 0, this.headSize);
-
+    
     let t = frameCount * 0.05 + this.noiseSeed;
     let torsoAngle = map(sin(t), -1, 1, -360, 360);
 
@@ -70,8 +70,7 @@ class Stickman {
     translate(0, 0);
     rotate(torsoAngle);
 
-    stroke(255);
-    line(0, 0, 0, this.torsoLength);
+    line(0, baseUnit * 0.5, 0, this.torsoLength);
 
     this.drawArm(0, this.headSize, 1);
     this.drawArm(0, this.headSize, -1);
