@@ -1,13 +1,13 @@
 let stickman;
 let canvasSize;
 let margin = 0;
-let baseUnit = 40;
+let baseUnit = 30;
 let strokeWidthValue = baseUnit * 0.1;
 let traceGraphics;
 let positionGraphics;
 
 function setup() {
-  createCanvas(600, 600);
+  createCanvas(400, 400);
   
   traceGraphics = createGraphics(width, height);
   traceGraphics.angleMode(DEGREES);
