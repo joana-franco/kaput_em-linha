@@ -12,54 +12,54 @@ function setup() {
 
   noFill();
   stroke(ac);
-  strokeWeight(size / 10);
+  strokeWeight(3);
   angleMode(DEGREES);
 
   shapes.push({
     shape: new Shape(1 * size),
     p1: { x: 0, y: -0.5 * size },
-    p2: { x: 0, y: -0.5 * size },
-    p3: { x: 0.2 * size, y: 0 },
-    r1: 90,
+    p2: { x: 0.2 * size, y: 0 },
+    p3: { x: 0, y: -0.5 * size },
+    r1: 0,
     r2: 0,
-    r3: 0,
+    r3: 90,
   });
 
   shapes.push({
     shape: new Shape(0.8 * size),
-    p1: { x: 0, y: 0 },
-    p2: { x: 0.5 * size, y: 0.2 * size },
-    p3: { x: 1.9 * size, y: 0 },
-    r1: -38,
-    r2: 45,
-    r3: 135,
-  });
-
-  shapes.push({
-    shape: new Shape(0.8 * size),
-    p1: { x: 0, y: 0 },
-    p2: { x: 0.5 * size, y: 0.2 * size },
-    p3: { x: 1.9 * size, y: 0 },
-    r1: 38,
+    p1: { x: 0.5 * size, y: 0.2 * size },
+    p2: { x: 1.9 * size, y: 0 },
+    p3: { x: 0, y: 0 },
+    r1: 45,
     r2: 135,
-    r3: 225,
+    r3: -38,
+  });
+
+  shapes.push({
+    shape: new Shape(0.8 * size),
+    p1: { x: 0.5 * size, y: 0.2 * size },
+    p2: { x: 1.9 * size, y: 0 },
+    p3: { x: 0, y: 0 },
+    r1: 135,
+    r2: 225,
+    r3: 38,
   });
 
   shapes.push({
     shape: new Shape(0.7 * size),
-    p1: { x: size, y: -0.5 * size },
-    p2: { x: 0.5 * size, y: -0.5 * size },
-    p3: { x: 1.2 * size, y: 0 },
+    p1: { x: 0.5 * size, y: -0.5 * size },
+    p2: { x: 1.2 * size, y: 0 },
+    p3: { x: size, y: -0.5 * size },
     r1: 90,
-    r2: 90,
-    r3: 0,
+    r2: 0,
+    r3: 90,
   });
 
   shapes.push({
     shape: new Shape(0 * size),
-    p1: { x: size, y: 0.5 * size },
-    p2: { x: 0.5 * size, y: -0.8 * size },
-    p3: { x: 0, y: 0 },
+    p1: { x: 0.5 * size, y: -0.8 * size },
+    p2: { x: 0, y: 0 },
+    p3: { x: size, y: 0.5 * size },
     r1: 0,
     r2: 0,
     r3: 0,
@@ -96,23 +96,24 @@ function draw() {
 class Shape {
   constructor(w) {
     this.w = w;
+    if (w == 0) this.isCircle = true;
   }
 
   display(p1, p2, p3, r1, r2, r3, offset) {
     push();
 
     let x, y, r;
-    if (offset < 0.4) {
-      let t = map(offset, 0, 0.4, 0, 1, true);
+    if (offset < 0.3) {
+      let t = map(offset, 0, 0.3, 0, 1, true);
       x = lerp(p1.x, p2.x, t);
       y = lerp(p1.y, p2.y, t);
       r = lerp(r1, r2, t);
-    } else if (offset < 0.6) {
+    } else if (offset < 0.4) {
       x = p2.x;
       y = p2.y;
       r = r2;
     } else {
-      let t = map(offset, 0.6, 1, 0, 1, true);
+      let t = map(offset, 0.4, 1, 0, 1, true);
       x = lerp(p2.x, p3.x, t);
       y = lerp(p2.y, p3.y, t);
       r = lerp(r2, r3, t);
@@ -120,7 +121,11 @@ class Shape {
 
     translate(x, y);
     rotate(r);
-    line(0, 0, this.w, 0);
+    if (this.isCircle) {
+      circle(0, 0, size / 12)
+    } else {
+      line(0, 0, this.w, 0);
+    }
 
     pop();
   }
