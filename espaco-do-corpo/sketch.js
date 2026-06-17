@@ -1,22 +1,21 @@
 let stickman;
 let canvasSize;
-let margin = 0;
-let baseUnit = 30;
-let strokeWidthValue = baseUnit * 0.1;
+let unidade = 40;
+let peso = 2;
 let traceGraphics;
 let positionGraphics;
 
 function setup() {
-  createCanvas(400, 400);
-  
+  createCanvas(600, 600);
+
   traceGraphics = createGraphics(width, height);
   traceGraphics.angleMode(DEGREES);
-  traceGraphics.strokeWeight(strokeWidthValue);
+  traceGraphics.strokeWeight(peso);
   traceGraphics.background(0);
-  
+
   positionGraphics = createGraphics(width, height);
   positionGraphics.angleMode(DEGREES);
-  positionGraphics.strokeWeight(strokeWidthValue);
+  positionGraphics.strokeWeight(peso);
   positionGraphics.background(0);
 
   stickman = new Stickman();
@@ -35,14 +34,14 @@ class Stickman {
   constructor() {
     this.seed = random(1000);
     this.pos = createVector(width / 2, height / 2);
-    this.headSize = baseUnit * 0.8;
-    this.torsoLength = baseUnit * 3;
-    this.shoulderSize = baseUnit * 0.4;
-    this.armLength = baseUnit * 1.4;
-    this.hipSize = baseUnit * 0.5;
-    this.legLength = baseUnit * 1.9;
+    this.headSize = unidade * 0.8;
+    this.torsoLength = unidade * 3;
+    this.shoulderSize = unidade * 0.4;
+    this.armLength = unidade * 1.4;
+    this.hipSize = unidade * 0.5;
+    this.legLength = unidade * 1.9;
   }
-  
+
   update() {
     this.t = frameCount * 0.002 + this.seed;
   }
@@ -56,18 +55,25 @@ class Stickman {
     g.push();
     g.rotate(torsoAngle);
     g.translate(0, -this.torsoLength / 2);
-    
-    g.stroke(hasTrace ? color(map(noise(this.t + 982437), 0, 1, 180, 255)) : color(0));
+
+    g.stroke(hasTrace ? color(255) : color(0));
     g.noFill();
     g.ellipse(0, 0, this.headSize);
 
-    g.line(0, baseUnit * 0.45, 0, this.torsoLength);
+    g.fill(hasTrace ? color(255) : color(0));
+    g.line(0, unidade * 0.45, 0, this.torsoLength);
+    g.circle(0, unidade * 0.8, peso * 3);
+    g.circle(0, this.torsoLength, peso * 3);
 
-    g.line(-this.shoulderSize, baseUnit * 0.8, this.shoulderSize, baseUnit * 0.8);
+    g.line(-this.shoulderSize, unidade * 0.8, this.shoulderSize, unidade * 0.8);
+    g.circle(-this.shoulderSize, unidade * 0.8, peso * 3);
+    g.circle(this.shoulderSize, unidade * 0.8, peso * 3);
     this.drawArm(g, -this.shoulderSize, this.headSize, 1);
     this.drawArm(g, this.shoulderSize, this.headSize, -1);
 
     g.line(-this.hipSize, this.torsoLength, this.hipSize, this.torsoLength);
+    g.circle(-this.hipSize, this.torsoLength, peso * 3);
+    g.circle(this.hipSize, this.torsoLength, peso * 3);
     this.drawLeg(g, -this.hipSize, this.torsoLength, 1);
     this.drawLeg(g, this.hipSize, this.torsoLength, -1);
 
@@ -85,11 +91,16 @@ class Stickman {
     g.rotate(shoulderAngle * side);
 
     g.line(0, 0, 0, this.armLength);
+    g.circle(0, 0, peso * 3);
+    g.circle(0, this.armLength, peso * 3);
 
     g.translate(0, this.armLength);
     g.rotate(elbowAngle * side);
 
     g.line(0, 0, 0, this.armLength);
+    g.circle(0, 0, peso * 3);
+    g.fill(color(255));
+    g.circle(0, this.armLength, peso * 3);
 
     g.pop();
   }
@@ -104,11 +115,16 @@ class Stickman {
     g.rotate(hipAngle * side);
 
     g.line(0, 0, 0, this.legLength);
+    g.circle(0, 0, peso * 3);
+    g.circle(0, this.legLength, peso * 3);
 
     g.translate(0, this.legLength);
     g.rotate(kneeAngle);
 
     g.line(0, 0, 0, this.legLength);
+    g.circle(0, 0, peso * 3);
+    g.fill(color(255));
+    g.circle(0, this.legLength, peso * 3);
 
     g.pop();
   }
