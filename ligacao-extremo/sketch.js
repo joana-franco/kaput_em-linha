@@ -101,7 +101,7 @@ class Segmento {
 
     if (this.pontos[0] == null) {
       fill(bg);
-      circle(this.start.x, this.start.y, unidade);
+      ellipse(this.start.x, this.start.y, unidade * 0.8);
     } else {
       line(this.start.x, this.start.y, this.end.x, this.end.y);
       fill(this.pontos[1] == 0 ? bg : c);
