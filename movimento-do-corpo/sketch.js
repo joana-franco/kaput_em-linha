@@ -2,7 +2,7 @@ let stickman;
 
 let unidade = 40;
 let peso = 2;
-let margem = unidade * 7;
+let margem = unidade * 6;
 
 let c = 255;
 let bg = 0;
@@ -26,7 +26,7 @@ function draw() {
 class Stickman {
   constructor() {
     this.segmentos = {
-      pescoco: new Segmento(null, unidade * 0.7, [-180, 360]),
+      pescoco: new Segmento(null, unidade * 0.7, [-360, 540]),
       tronco: new Segmento(null, unidade * 2.7, [-60, 60]),
       ombroEsq: new Segmento(null, unidade * 0.4, [60, 120]),
       bracoEsq: new Segmento(null, unidade * 1.4, [-120, 60]),
@@ -61,12 +61,43 @@ class Stickman {
 
   update() {
     this.t = frameCount * 0.01;
+    for (const segmento of Object.values(this.segmentos)) {
+      segmento.update();
+    }
+    this.centerStickman();
+  }
+
+  centerStickman() {
+    let minX = Infinity;
+    let maxX = -Infinity;
+    let minY = Infinity;
+    let maxY = -Infinity;
+
+    const segmentos = Object.values(this.segmentos);
+
+    for (const s of segmentos) {
+      minX = Math.min(minX, s.start.x, s.end.x);
+      maxX = Math.max(maxX, s.start.x, s.end.x);
+      minY = Math.min(minY, s.start.y, s.end.y);
+      maxY = Math.max(maxY, s.start.y, s.end.y);
+    }
+
+    const cx = (minX + maxX) / 2;
+    const cy = (minY + maxY) / 2;
+
+    const canvasCenterX = width / 2;
+    const canvasCenterY = height / 2;
+
+    this.offset = {
+      x: canvasCenterX - cx,
+      y: canvasCenterY - cy,
+    };
   }
 
   display() {
     for (const segmento of Object.values(this.segmentos)) {
       segmento.update();
-      segmento.display();
+      segmento.display(this.offset);
     }
   }
 }
@@ -92,8 +123,8 @@ class Segmento {
         this.relativo.angle;
     } else {
       this.start = {
-        x: map(noise(n * 2 + 9999), 0, 1, margem, width - margem),
-        y: map(noise(n * 2 + 999999), 0, 1, margem, height - margem),
+        x: map(noise(n * 2 + 9999), 0, 1, 0, unidade * 2),
+        y: map(noise(n * 2 + 999999), 0, 1, 0, unidade * 2),
       };
       this.angle = map(noise(n), 0, 1, this.amplitude[0], this.amplitude[1]);
     }
@@ -109,18 +140,23 @@ class Segmento {
     };
   }
 
-  display() {
-    line(this.start.x, this.start.y, this.end.x, this.end.y);
+  display(offset = { x: 0, y: 0 }) {
+    line(
+      this.start.x + offset.x,
+      this.start.y + offset.y,
+      this.end.x + offset.x,
+      this.end.y + offset.y
+    );
 
     fill(this.limite ? bg : c);
-    circle(this.end.x, this.end.y, peso * 3.5);
+    circle(this.end.x + offset.x, this.end.y + offset.y, peso * 3.5);
 
     if (this.relativo) {
       fill(c);
-      circle(this.start.x, this.start.y, peso * 3.5);
+      circle(this.start.x + offset.x, this.start.y + offset.y, peso * 3.5);
     } else {
       fill(bg);
-      ellipse(this.start.x, this.start.y, unidade * 0.8);
+      ellipse(this.start.x + offset.x, this.start.y + offset.y, unidade * 0.8);
     }
   }
 }
