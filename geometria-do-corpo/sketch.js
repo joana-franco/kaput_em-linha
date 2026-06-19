@@ -1,10 +1,10 @@
 let unidade = 40;
 let peso = 2;
-let segmentos = [];
-let margem = unidade * 4;
-
-let c = 255;
-let bg = 0;
+let segmentos;
+const c = 255;
+const bg = 0;
+let mouseSuave = 0;
+let suavizacao = 0.5;
 
 function setup() {
   createCanvas(600, 600);
@@ -13,105 +13,119 @@ function setup() {
   strokeWeight(peso);
   angleMode(DEGREES);
 
-  segmentos.push(new Segmento(unidade * 0.8, [1, 2], [0, 180])); // pescoço
-  segmentos.push(new Segmento(unidade * 2.7, [2, 3], [0, 180])); // tronco
-  segmentos.push(new Segmento(unidade * 0.4, [2, 4], [160, 200])); // ombros
-  segmentos.push(new Segmento(unidade * 1.4, [4, 5])); // braços
-  segmentos.push(new Segmento(unidade * 1.4, [5, 0])); // antebraços
-  segmentos.push(new Segmento(0, [null, 1], [0, 0])); // cabeça
-  segmentos.push(new Segmento(unidade * 0.4, [2, 6], [-20, 20])); // ombros
-  segmentos.push(new Segmento(unidade * 1.4, [6, 7])); // braços
-  segmentos.push(new Segmento(unidade * 1.4, [7, 0])); // antebraços
-  segmentos.push(new Segmento(unidade * 0.5, [3, 8], [160, 200])); // ancas
-  segmentos.push(new Segmento(unidade * 1.9, [8, 9])); // coxas
-  segmentos.push(new Segmento(unidade * 1.9, [9, 0], [-45, 225])); // pernas
-  segmentos.push(new Segmento(unidade * 0.5, [3, 10], [-20, 20])); // ancas
-  segmentos.push(new Segmento(unidade * 1.9, [10, 11])); // coxas
-  segmentos.push(new Segmento(unidade * 1.9, [11, 0], [-45, 225])); // pernas
+  criarSegmentos();
+  posicionarSegmentosIniciais();
+}
+
+function criarSegmentos() {
+  segmentos = {
+    pescoco: new Segmento(null, unidade * 0.7),
+    ombroEsq: new Segmento(null, unidade * 0.4, 180),
+    bracoEsq: new Segmento(null, unidade * 1.4, 110),
+    antebracoEsq: new Segmento(null, unidade * 1.4, 110, true),
+    ombroDir: new Segmento(null, unidade * 0.4, 0),
+    bracoDir: new Segmento(null, unidade * 1.4, 70),
+    antebracoDir: new Segmento(null, unidade * 1.4, 70, true),
+    tronco: new Segmento(null, unidade * 2.7),
+    ancaEsq: new Segmento(null, unidade * 0.5, 180),
+    coxaEsq: new Segmento(null, unidade * 1.9),
+    pernaEsq: new Segmento(null, unidade * 1.9, 90, true),
+    ancaDir: new Segmento(null, unidade * 0.5, 0),
+    coxaDir: new Segmento(null, unidade * 1.9),
+    pernaDir: new Segmento(null, unidade * 1.9, 90, true),
+  };
+
+  segmentos.tronco.relativo = segmentos.pescoco;
+  segmentos.ombroEsq.relativo = segmentos.pescoco;
+  segmentos.bracoEsq.relativo = segmentos.ombroEsq;
+  segmentos.antebracoEsq.relativo = segmentos.bracoEsq;
+  segmentos.ombroDir.relativo = segmentos.pescoco;
+  segmentos.bracoDir.relativo = segmentos.ombroDir;
+  segmentos.antebracoDir.relativo = segmentos.bracoDir;
+  segmentos.ancaEsq.relativo = segmentos.tronco;
+  segmentos.coxaEsq.relativo = segmentos.ancaEsq;
+  segmentos.pernaEsq.relativo = segmentos.coxaEsq;
+  segmentos.ancaDir.relativo = segmentos.tronco;
+  segmentos.coxaDir.relativo = segmentos.ancaDir;
+  segmentos.pernaDir.relativo = segmentos.coxaDir;
+}
+
+function posicionarSegmentosIniciais() {
+  const lista = Object.values(segmentos);
+  const intervalo = width / lista.length;
+
+  let i = 0;
+  for (const seg of lista) {
+    seg.inicial = {
+      x: i,
+      y: height / 4 + unidade * 2,
+    };
+    i += intervalo;
+  }
+
+  segmentos.pescoco.inicial = {
+    x: width / 2,
+    y: height / 4,
+  };
 }
 
 function draw() {
   background(bg);
-
-  let starts = [];
-  let ends = [];
-
-  segmentos.forEach((s) => {
-    s.update();
-    s.display();
-    starts.push({ seg: s, id: s.pontos[0], pos: s.start });
-    ends.push({ seg: s, id: s.pontos[1], pos: s.end });
-  });
-
-  for (let e = 0; e < ends.length; e++) {
-    for (let s = 0; s < starts.length; s++) {
-      if (starts[s].id !== ends[e].id) continue;
-      let distancia = distPoints(starts[s].pos, ends[e].pos);
-      if (distancia < unidade * 2) {
-        starts[s].seg.snap = ends[e].pos;
-      }
-    }
+mouseSuave = lerp(mouseSuave, mouseX, suavizacao);
+  for (const seg of Object.values(segmentos)) {
+    seg.update(mouseSuave);
+    seg.display();
   }
 }
 
 class Segmento {
-  constructor(tamanho, pontos, amplitude = [-90, 270]) {
+  constructor(relativo, tamanho, angulo = 90, limite = false) {
+    this.relativo = relativo;
     this.tamanho = tamanho;
-    this.pontos = pontos;
-    this.amplitude = amplitude;
-    this.seed = random(1000);
-    this.snap = null;
+    this.angulo = angulo;
+    this.limite = limite;
   }
 
-  update() {
-    let n = frameCount * 0.003 + this.seed;
+  update(mouseSuave) {
+    this.start = { ...this.inicial };
 
-    this.angle = map(noise(n), 0, 1, this.amplitude[0], this.amplitude[1]);
-    this.position = {
-      x: map(noise(n + 9999), 0, 1, margem, width - margem),
-      y: map(noise(n + 999999), 0, 1, unidade, height - margem),
-    };
-    this.rotation = {
-      x: cos(this.angle) * this.tamanho,
-      y: sin(this.angle) * this.tamanho,
-    };
-    if (this.snap) {
-      let d = dist(this.start.x, this.start.y, this.snap.x, this.snap.y);
-      if (d > peso * 2) {
-        this.start.x = lerp(this.start.x, this.snap.x, 0.2);
-        this.start.y = lerp(this.start.y, this.snap.y, 0.2);
-      } else {
-        this.start.x = this.snap.x;
-        this.start.y = this.snap.y;
-      }
-    } else {
+    const distancia = dist(mouseSuave, 0, width / 2, 0);
+    const maxima = dist(0, 0, width / 2, 0) - 10;
+    const centro = unidade * 3;
+
+    if (this.relativo) {
+      const rel = this.relativo.end;
       this.start = {
-        x: this.position.x,
-        y: this.position.y,
+        x: map(distancia, maxima, centro, this.inicial.x, rel.x, true),
+        y: map(distancia, maxima, centro, this.inicial.y, rel.y, true),
       };
     }
+
+    const ang = map(distancia, maxima, centro, 90, this.angulo, true);
+
+    this.rotacao = {
+      x: cos(ang) * this.tamanho,
+      y: sin(ang) * this.tamanho,
+    };
+
     this.end = {
-      x: this.start.x + this.rotation.x,
-      y: this.start.y + this.rotation.y,
+      x: this.start.x + this.rotacao.x,
+      y: this.start.y + this.rotacao.y,
     };
   }
 
   display() {
-    noFill();
+    line(this.start.x, this.start.y, this.end.x, this.end.y);
 
-    if (this.pontos[0] == null) {
+    fill(this.limite ? bg : c);
+    circle(this.end.x, this.end.y, peso * 3.5);
+
+    if (this.relativo) {
+      fill(c);
+      circle(this.start.x, this.start.y, peso * 3.5);
+    } else {
       fill(bg);
       ellipse(this.start.x, this.start.y, unidade * 0.8);
-    } else {
-      line(this.start.x, this.start.y, this.end.x, this.end.y);
-      fill(this.pontos[1] == 0 ? bg : c);
-      circle(this.end.x, this.end.y, peso * 3.5);
-      fill(this.pontos[0] == 0 ? bg : c);
-      circle(this.start.x, this.start.y, peso * 3.5);
     }
   }
-}
-
-function distPoints(a, b) {
-  return dist(a.x, a.y, b.x, b.y);
 }
