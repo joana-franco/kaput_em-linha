@@ -1,6 +1,6 @@
 let stickman;
 
-let unidade = 30;
+let unidade = 40;
 let peso = 2;
 let margem = unidade * 7;
 
