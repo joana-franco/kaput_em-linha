@@ -7,6 +7,9 @@ let margem = unidade * 6;
 let c = 255;
 let bg = 0;
 
+let offset = {};
+let suavizacao = 0.05;
+
 function setup() {
   createCanvas(600, 600);
   angleMode(DEGREES);
@@ -27,19 +30,19 @@ class Stickman {
   constructor() {
     this.segmentos = {
       pescoco: new Segmento(null, unidade * 0.7, [-360, 540]),
-      tronco: new Segmento(null, unidade * 2.7, [-60, 60]),
-      ombroEsq: new Segmento(null, unidade * 0.4, [60, 120]),
-      bracoEsq: new Segmento(null, unidade * 1.4, [-120, 60]),
-      antebracoEsq: new Segmento(null, unidade * 1.4, [-130, 130], true),
-      ombroDir: new Segmento(null, unidade * 0.4, [-60, -120]),
-      bracoDir: new Segmento(null, unidade * 1.4, [-60, 120]),
-      antebracoDir: new Segmento(null, unidade * 1.4, [-130, 130], true),
-      ancaEsq: new Segmento(null, unidade * 0.5, [60, 120]),
-      coxaEsq: new Segmento(null, unidade * 1.9, [30, -130]),
-      pernaEsq: new Segmento(null, unidade * 1.9, [-130, 130], true),
-      ancaDir: new Segmento(null, unidade * 0.5, [-60, -120]),
-      coxaDir: new Segmento(null, unidade * 1.9, [130, -30]),
-      pernaDir: new Segmento(null, unidade * 1.9, [-130, 130], true),
+      tronco: new Segmento(null, unidade * 2.7),
+      ombroEsq: new Segmento(null, unidade * 0.4),
+      bracoEsq: new Segmento(null, unidade * 1.4),
+      antebracoEsq: new Segmento(null, unidade * 1.4, [-180, 180], true),
+      ombroDir: new Segmento(null, unidade * 0.4),
+      bracoDir: new Segmento(null, unidade * 1.4),
+      antebracoDir: new Segmento(null, unidade * 1.4, [-180, 180], true),
+      ancaEsq: new Segmento(null, unidade * 0.5),
+      coxaEsq: new Segmento(null, unidade * 1.9),
+      pernaEsq: new Segmento(null, unidade * 1.9, [-180, 180], true),
+      ancaDir: new Segmento(null, unidade * 0.5),
+      coxaDir: new Segmento(null, unidade * 1.9),
+      pernaDir: new Segmento(null, unidade * 1.9, [-180, 180], true),
     };
 
     const s = this.segmentos;
@@ -57,6 +60,8 @@ class Stickman {
     s.ancaDir.relativo = s.tronco;
     s.coxaDir.relativo = s.ancaDir;
     s.pernaDir.relativo = s.coxaDir;
+
+    this.offset = { x: 0, y: 0 };
   }
 
   update() {
@@ -88,9 +93,14 @@ class Stickman {
     const canvasCenterX = width / 2;
     const canvasCenterY = height / 2;
 
-    this.offset = {
+    offset = {
       x: canvasCenterX - cx,
       y: canvasCenterY - cy,
+    };
+
+    this.offset = {
+      x: lerp(this.offset.x, offset.x, suavizacao),
+      y: lerp(this.offset.y, offset.y, suavizacao),
     };
   }
 
@@ -103,7 +113,7 @@ class Stickman {
 }
 
 class Segmento {
-  constructor(relativo, tamanho, amplitude = [0, 0], limite = false) {
+  constructor(relativo, tamanho, amplitude = [-180, 180], limite = false) {
     this.relativo = relativo;
     this.tamanho = tamanho;
     this.amplitude = amplitude;
