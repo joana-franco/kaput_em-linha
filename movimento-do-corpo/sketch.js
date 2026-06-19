@@ -83,7 +83,7 @@ class Segmento {
   update() {
     const amplitude = Math.max(...this.amplitude) - Math.min(...this.amplitude);
     const frequencia = 1 / max(amplitude, 1);
-    const n = frameCount * frequencia * 0.4 + this.seed;
+    const n = frameCount * frequencia * 0.5 + this.seed;
 
     if (this.relativo) {
       this.start = { ...this.relativo.end };
@@ -92,8 +92,8 @@ class Segmento {
         this.relativo.angle;
     } else {
       this.start = {
-        x: map(noise(n + 9999), 0, 1, margem, width - margem),
-        y: map(noise(n + 999999), 0, 1, margem, height - margem),
+        x: map(noise(n * 2 + 9999), 0, 1, margem, width - margem),
+        y: map(noise(n * 2 + 999999), 0, 1, margem, height - margem),
       };
       this.angle = map(noise(n), 0, 1, this.amplitude[0], this.amplitude[1]);
     }
