@@ -1,8 +1,8 @@
 let unidade = 40;
 let peso = 2;
 let segmentos;
-const c = 255;
-const bg = 0;
+const c = 0;
+const bg = 255;
 let mouseSuave = 0;
 let suavizacao = 0.5;
 
