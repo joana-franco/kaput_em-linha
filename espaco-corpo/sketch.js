@@ -94,7 +94,7 @@ function setVignette() {
   vignette.noStroke();
   let w = vignette.width;
   let h = vignette.height;
-  vignette.background(0);
+  vignette.background(bg);
   for (let i = 0; i < 50; i++) {
     vignette.erase(15);
     vignette.ellipse(
