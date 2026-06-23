@@ -5,13 +5,16 @@ let peso = 2;
 let traceGraphics;
 let positionGraphics;
 
+let bg = 255;
+let c = 0;
+
 function setup() {
   createCanvas(600, 600);
 
   traceGraphics = createGraphics(width, height);
   traceGraphics.angleMode(DEGREES);
   traceGraphics.strokeWeight(peso);
-  traceGraphics.background(0);
+  traceGraphics.background(bg);
 
   positionGraphics = createGraphics(width, height);
   positionGraphics.angleMode(DEGREES);
@@ -56,11 +59,11 @@ class Stickman {
     g.rotate(torsoAngle);
     g.translate(0, -this.torsoLength / 2);
 
-    g.stroke(hasTrace ? color(255) : color(0));
+    g.stroke(hasTrace ? color(c) : color(bg));
     g.noFill();
     g.ellipse(0, 0, this.headSize);
 
-    g.fill(hasTrace ? color(255) : color(0));
+    g.fill(hasTrace ? color(c) : color(bg));
     g.line(0, unidade * 0.45, 0, this.torsoLength);
     g.circle(0, unidade * 0.8, peso * 3);
     g.circle(0, this.torsoLength, peso * 3);
@@ -99,7 +102,7 @@ class Stickman {
 
     g.line(0, 0, 0, this.armLength);
     g.circle(0, 0, peso * 3);
-    g.fill(color(255));
+    g.fill(color(c));
     g.circle(0, this.armLength, peso * 3);
 
     g.pop();
@@ -123,7 +126,7 @@ class Stickman {
 
     g.line(0, 0, 0, this.legLength);
     g.circle(0, 0, peso * 3);
-    g.fill(color(255));
+    g.fill(color(c));
     g.circle(0, this.legLength, peso * 3);
 
     g.pop();
