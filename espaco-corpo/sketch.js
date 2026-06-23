@@ -4,8 +4,8 @@ let figure;
 let smoothOffset = 0;
 let vignette;
 
-let bg = 0;
-let ac = 255;
+let bg = 255;
+let ac = 0;
 
 let cx, cy;
 
