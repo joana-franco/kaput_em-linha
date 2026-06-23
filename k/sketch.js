@@ -1,7 +1,7 @@
 let size = 100;
 let margin = 200;
-let bg = 0;
-let ac = 255;
+let bg = 255;
+let ac = 0;
 let smoothOffset = 0;
 
 let shapes = [];
