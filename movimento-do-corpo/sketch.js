@@ -4,8 +4,8 @@ let unidade = 40;
 let peso = 2;
 let margem = unidade * 6;
 
-let c = 255;
-let bg = 0;
+let c = 0;
+let bg = 255;
 
 let offset = {};
 let suavizacao = 0.05;
