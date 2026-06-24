@@ -35,7 +35,7 @@ window.clearCanvas = function () {
 window.saveDrawing = async function () {
   const image = canvas.toDataURL();
 
-  await addDoc(collection(db, "drawings"), {
+  await addDoc(collection(db, "stickmans"), {
     image,
     createdAt: Date.now()
   });
@@ -48,7 +48,7 @@ async function loadGallery() {
   const gallery = document.getElementById("gallery");
   gallery.innerHTML = "";
 
-  const q = query(collection(db, "drawings"), orderBy("createdAt", "desc"));
+  const q = query(collection(db, "stickmans"), orderBy("createdAt", "desc"));
   const snapshot = await getDocs(q);
 
   snapshot.forEach(doc => {
