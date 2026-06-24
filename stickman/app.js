@@ -41,6 +41,8 @@ window.saveDrawing = async function () {
   });
 
   loadGallery();
+
+  clearCanvas();
 };
 
 // Load drawings
