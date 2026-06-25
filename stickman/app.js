@@ -17,7 +17,7 @@ canvas.addEventListener("mousemove", draw);
 function draw(e) {
   if (!drawing) return;
 
-  ctx.lineWidth = 3;
+  ctx.lineWidth = 5;
   ctx.lineCap = "round";
 
   ctx.lineTo(e.offsetX, e.offsetY);
@@ -42,7 +42,7 @@ window.saveDrawing = async function () {
 
   loadGallery();
 
-  clearCanvas();
+  window.clearCanvas();
 };
 
 // Load drawings
