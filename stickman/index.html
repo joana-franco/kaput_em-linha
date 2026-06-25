@@ -1,43 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Kaput! em linha - Stickmans</title>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Kaput! em linha - Stickmans</title>
 
-  <style>
-body {
-  font-family: Inter, Arial, sans-serif;
-  text-align: center;
-}
+    <style>
+            body {
+              font-family: Inter, Arial, sans-serif;
+              text-align: center;
+              display: flex;
+              gap: 20px;
+            }
 
-canvas {
-  border: 1px solid black;
-  cursor: crosshair;
-}
+            canvas {
+              border: 1px solid black;
+              cursor: crosshair;
+            }
 
-.controls {
-  margin: 10px 20px;
-}
+            .controls {
+              margin: 20px;
+              display: flex;
+              justify-content: center;
+              gap: 15px;
+            }
 
-#gallery img {
-  width: 100px;
-  margin: 5px;
-}
-  </style> 
-</head>
-<body>
-  <canvas id="canvas" width="500" height="500"></canvas>
+            button {
+              background: none;
+              border: 1px solid black;
+              padding: 5px 10px;
+              cursor: pointer;
+              border-radius: 100px;
+            }
 
-  <div class="controls">
-    <button onclick="clearCanvas()">Clear</button>
-    <button onclick="saveDrawing()">Save</button>
-  </div>
-  
-  <div id="gallery"></div>
+            button:hover {
+              background: rgba(0, 0, 0, 0.2);
+            }
 
-  <!-- Firebase -->
-  <script type="module" src="firebase.js"></script>
-  <script type="module" src="app.js"></script>
+            #gallery {
+              height: 500px;
+              overflow-y: scroll;
+            }
 
-</body>
+            #gallery img {
+              width: 100px;
+              margin: 5px;
+            }
+    </style>
+  </head>
+  <body>
+    <section class="canvas">
+      <canvas id="canvas" width="500" height="500"></canvas>
+
+      <div class="controls">
+        <button onclick="clearCanvas()">Clear</button>
+        <button onclick="saveDrawing()">Save</button>
+      </div>
+    </section>
+
+    <div id="gallery">
+    </div>
+
+    <!-- Firebase -->
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="app.js"></script>
+  </body>
 </html>
