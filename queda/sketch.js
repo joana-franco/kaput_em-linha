@@ -9,7 +9,7 @@ let bg = 255;
 let c = 0;
 
 function setup() {
-  createCanvas(600, 600);
+  createCanvas(500, 500);
   angleMode(DEGREES);
   pixelDensity(2);
   strokeWeight(strokeWidthValue);
