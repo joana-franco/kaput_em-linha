@@ -1,16 +1,19 @@
 let stickmen = [];
 let canvasSize;
 let margin = 0;
-let baseUnit = 20;
+let baseUnit = 15;
 let strokeWidthValue = baseUnit * 0.1;
 let vignette;
 
+let bg = 255;
+let c = 0;
+
 function setup() {
-  createCanvas(600, 1000);
+  createCanvas(600, 600);
   angleMode(DEGREES);
   pixelDensity(2);
   strokeWeight(strokeWidthValue);
-  background(0);
+  background(bg);
 
   let total = Math.round(20);
   for (let i = 0; i < total; i++) {
@@ -21,7 +24,7 @@ function setup() {
 }
 
 function draw() {
-  background(0, 20);
+  background(bg);
   for (let sm of stickmen) {
     sm.update();
     sm.display();
@@ -38,9 +41,9 @@ class Stickman {
   reset() {
     this.pos = createVector(
       random(margin, width - margin),
-      random(-height , -100)
+      random(-height, -100)
     );
-    this.fallSpeed = random(2, 3);
+    this.fallSpeed = random(1, 2);
     this.headSize = baseUnit * 0.8;
     this.torsoLength = baseUnit * 3;
     this.armLength = baseUnit * 1.5;
@@ -59,7 +62,7 @@ class Stickman {
     push();
     translate(this.pos.x, this.pos.y);
 
-    stroke(255);
+    stroke(c);
     noFill();
     ellipse(0, 0, this.headSize);
     
@@ -130,7 +133,7 @@ function setVignette() {
   vignette.noStroke();
   let w = vignette.width;
   let h = vignette.height;
-  vignette.background(0);
+  vignette.background(bg);
   for (let i = 0; i < 50; i++) {
     vignette.erase(15);
     vignette.ellipse(
